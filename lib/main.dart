@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'config/theme.dart';
+import 'providers/auth_provider.dart';
+import 'providers/livestock_provider.dart';
+import 'services/notification_service.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/main_shell.dart';
+import 'screens/batches/batch_form_screen.dart';
+import 'screens/daily_log/daily_log_form_screen.dart';
+import 'screens/sales/sale_list_screen.dart';
+import 'screens/sales/sale_form_screen.dart';
+import 'screens/investments/investment_list_screen.dart';
+import 'screens/investments/investment_form_screen.dart';
+import 'screens/vaccination/vaccination_list_screen.dart';
+import 'screens/vaccination/vaccination_form_screen.dart';
+import 'screens/vendors/vendor_list_screen.dart';
+import 'screens/vendors/vendor_form_screen.dart';
+import 'screens/locations/location_list_screen.dart';
+import 'screens/locations/location_form_screen.dart';
+import 'screens/bird_breeds/breed_list_screen.dart';
+import 'screens/bird_breeds/breed_form_screen.dart';
+import 'screens/performance/performance_screen.dart';
+import 'screens/analytics/analytics_screen.dart';
+import 'screens/feed/feed_screen.dart';
+import 'screens/feed/commercial_feed_form.dart';
+import 'screens/feed/own_mix_form.dart';
+import 'screens/medicine/medicine_list_screen.dart';
+import 'screens/medicine/medicine_form_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
+  runApp(const RCFTrackerApp());
+}
+
+class RCFTrackerApp extends StatelessWidget {
+  const RCFTrackerApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()..checkAuth()),
+        ChangeNotifierProvider(create: (_) => LivestockProvider()),
+      ],
+      child: MaterialApp(
+        title: 'RCF Tracker',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.theme,
+        home: const AuthGate(),
+        routes: {
+          '/batch-form': (_) => const BatchFormScreen(),
+          '/daily-log-form': (_) => const DailyLogFormScreen(),
+          '/sales': (_) => const SaleListScreen(),
+          '/sale-form': (_) => const SaleFormScreen(),
+          '/investments': (_) => const InvestmentListScreen(),
+          '/investment-form': (_) => const InvestmentFormScreen(),
+          '/vaccination': (_) => const VaccinationListScreen(),
+          '/vaccination-form': (_) => const VaccinationFormScreen(),
+          '/vendors': (_) => const VendorListScreen(),
+          '/vendor-form': (_) => const VendorFormScreen(),
+          '/locations': (_) => const LocationListScreen(),
+          '/location-form': (_) => const LocationFormScreen(),
+          '/bird-breeds': (_) => const BreedListScreen(),
+          '/breed-form': (_) => const BreedFormScreen(),
+          '/performance': (_) => const PerformanceScreen(),
+          '/analytics': (_) => const AnalyticsScreen(),
+          '/feeds': (_) => const FeedScreen(),
+          '/commercial-feed-form': (_) => const CommercialFeedForm(),
+          '/own-mix-form': (_) => const OwnMixForm(),
+          '/medicines': (_) => const MedicineListScreen(),
+          '/medicine-form': (_) => const MedicineFormScreen(),
+        },
+      ),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+
+    if (auth.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: AppTheme.black)),
+      );
+    }
+
+    return auth.isLoggedIn ? const MainShell() : const LoginScreen();
+  }
+}
