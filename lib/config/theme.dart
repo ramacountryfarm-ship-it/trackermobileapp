@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Brand
-  static const Color brandPrimary = Color(0xFF81251D);
-  static const Color brandHighlight = Color(0xFFD5B251);
+  static const Color brandPrimary = Color(0xFF204D3A);
+  static const Color brandHighlight = Color(0xFFF0B322);
 
   // Core palette - dark premium
   static const Color black = Color(0xFF000000);
@@ -71,7 +71,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: black,
+          backgroundColor: brandPrimary,
           foregroundColor: white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -81,7 +81,7 @@ class AppTheme {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.transparent,
-        selectedItemColor: black,
+        selectedItemColor: brandHighlight,
         unselectedItemColor: gray,
         type: BottomNavigationBarType.fixed,
         elevation: 0,

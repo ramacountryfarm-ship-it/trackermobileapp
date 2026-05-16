@@ -34,24 +34,23 @@ class _LoginScreenState extends State<LoginScreen> {
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: GradientBg(
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo - wide format (1491x560)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Image.asset('assets/logo.png', width: double.infinity, height: 70, fit: BoxFit.contain),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text('Sign in to your account', style: TextStyle(fontSize: 14, color: AppTheme.gray)),
+      backgroundColor: AppTheme.brandPrimary,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo - Yellow on Green (self-contained)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Image.asset('assets/logo.png', width: double.infinity, height: 80, fit: BoxFit.contain),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text('Sign in to your account', style: TextStyle(fontSize: 14, color: Colors.white70)),
                     const SizedBox(height: 36),
 
                     // Glass form card
@@ -129,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 }
