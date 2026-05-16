@@ -44,6 +44,18 @@ flutter {
     source = "../.."
 }
 
+// Workaround: create missing baseline-prof.txt that ART profile task expects
+afterEvaluate {
+    tasks.matching { it.name == "compileReleaseArtProfile" }.configureEach {
+        doFirst {
+            val dir = File(buildDir, "intermediates/l8_art_profile/release/l8DexDesugarLibRelease")
+            dir.mkdirs()
+            val f = File(dir, "baseline-prof.txt")
+            if (!f.exists()) f.createNewFile()
+        }
+    }
+}
+
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

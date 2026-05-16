@@ -27,6 +27,13 @@ import 'screens/feed/commercial_feed_form.dart';
 import 'screens/feed/own_mix_form.dart';
 import 'screens/medicine/medicine_list_screen.dart';
 import 'screens/medicine/medicine_form_screen.dart';
+import 'screens/customers/customer_list_screen.dart';
+import 'screens/customers/customer_form_screen.dart';
+import 'screens/egg_trading/egg_trading_screen.dart';
+import 'screens/egg_trading/farmer_form_screen.dart';
+import 'screens/egg_trading/procurement_form_screen.dart';
+import 'screens/egg_trading/resale_form_screen.dart';
+import 'screens/egg_trading/wastage_form_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +78,13 @@ class RCFTrackerApp extends StatelessWidget {
           '/own-mix-form': (_) => const OwnMixForm(),
           '/medicines': (_) => const MedicineListScreen(),
           '/medicine-form': (_) => const MedicineFormScreen(),
+          '/customers': (_) => const CustomerListScreen(),
+          '/customer-form': (_) => const CustomerFormScreen(),
+          '/egg-trading': (_) => const EggTradingScreen(),
+          '/farmer-form': (_) => const FarmerFormScreen(),
+          '/procurement-form': (_) => const ProcurementFormScreen(),
+          '/resale-form': (_) => const ResaleFormScreen(),
+          '/wastage-form': (_) => const WastageFormScreen(),
         },
       ),
     );

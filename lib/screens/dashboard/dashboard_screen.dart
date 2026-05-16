@@ -129,7 +129,23 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                     Row(children: [
                       Expanded(child: _stat('Feed Today', Fmt.kg(_stats['feedTodayKg']), Icons.grass_rounded, const Color(0xFF9B59B6))),
                       const SizedBox(width: 12),
-                      Expanded(child: _stat('Egg Stock', Fmt.number(_stats['eggStock']), Icons.inventory_2_rounded, const Color(0xFF3498DB))),
+                      Expanded(child: _stat('Farm Eggs', Fmt.number(_stats['eggStock']), Icons.egg_alt_outlined, const Color(0xFF2ECC71))),
+                    ]),
+                    const SizedBox(height: 12),
+
+                    // Trading stats row
+                    Row(children: [
+                      Expanded(child: _stat('Trading Stock', Fmt.number(_stats['tradingStock']), Icons.swap_horiz_rounded, const Color(0xFF3498DB))),
+                      const SizedBox(width: 12),
+                      Expanded(child: _stat('To Receive', Fmt.currency(_stats['totalPendingReceivables']), Icons.arrow_downward_rounded,
+                          (_stats['totalPendingReceivables'] as num? ?? 0) > 0 ? const Color(0xFF34C759) : AppTheme.gray)),
+                    ]),
+                    const SizedBox(height: 12),
+                    Row(children: [
+                      Expanded(child: _stat('To Pay Farmers', Fmt.currency(_stats['totalPendingPayables']), Icons.arrow_upward_rounded,
+                          (_stats['totalPendingPayables'] as num? ?? 0) > 0 ? const Color(0xFFFF3B30) : AppTheme.gray)),
+                      const SizedBox(width: 12),
+                      Expanded(child: _stat('Egg Stock', Fmt.number(_stats['eggStock']), Icons.inventory_2_rounded, const Color(0xFF9B59B6))),
                     ]),
                     const SizedBox(height: 20),
 
