@@ -7,6 +7,18 @@
 
 ---
 
+## Important: How This App Is Used
+
+- **Only one user — the farm owner.** No customer access, no staff login needed.
+- **Primary device = Android APK.** Mobile app is the main daily tool.
+- **Web dashboard = secondary.** Used for detailed reports and analysis only.
+- **No customer-facing features.** Everything is internal for personal tracking.
+- **Offline mode is critical** — data entered in the field where internet may be weak.
+
+> Always build mobile-first. Web features are secondary.
+
+---
+
 ## Current Status ✅ Already Built
 
 | Module | Web | Mobile |
@@ -329,22 +341,23 @@ End of month → PDF report ready → share with accountant
 ---
 
 ## Build Priority Order
+*(Mobile APK first — that is the primary device)*
 
-| # | Feature | Phase | Effort |
-|---|---|---|---|
-| 1 | Payment method + order source fields | 1 | 1 day |
-| 2 | Collection report + order source report page | 1 | 2 days |
-| 3 | Firebase FCM background push notifications | 2 | 3 days |
-| 4 | Scheduled cron jobs (daily summary, overdue alerts) | 2 | 2 days |
-| 5 | PDF invoice generation + WhatsApp share | 4 | 2 days |
-| 6 | Smart reports (P&L, batch performance, customer) | 3 | 3 days |
-| 7 | FCR analytics | 7 | 1 day |
-| 8 | Google Sheets export | 6 | 2 days |
-| 9 | WhatsApp auto-reminder (click-to-chat) | 5 | 1 day |
-| 10 | Offline mode | 8 | 4 days |
-| 11 | Role-based access | 9 | 3 days |
-| 12 | GST billing | Optional | 2 days |
-| 13 | Labour / staff tracking | Optional | 3 days |
+| # | Feature | Mobile | Web | Effort |
+|---|---|---|---|---|
+| 1 | Payment method + order source fields in Sales | ✅ First | Then | 1 day |
+| 2 | Collection report + order source report | ✅ First | Then | 2 days |
+| 3 | Firebase FCM — background push notifications | ✅ Only mobile | Not needed | 3 days |
+| 4 | Scheduled cron jobs (daily summary, overdue alerts) | Receives push | — | 2 days |
+| 5 | Offline mode (Hive local storage + sync) | ✅ Critical | Not needed | 4 days |
+| 6 | PDF invoice → WhatsApp share | ✅ First | Then | 2 days |
+| 7 | Smart reports (P&L, batch, customer) | ✅ First | Then | 3 days |
+| 8 | FCR feed efficiency analytics | ✅ First | Then | 1 day |
+| 9 | WhatsApp reminder (click-to-chat) | ✅ Only mobile | Not needed | 1 day |
+| 10 | Google Sheets export | Web only | ✅ | 2 days |
+| 11 | Role-based access | Skip — single user | Skip | — |
+| 12 | GST billing | Optional | Optional | 2 days |
+| 13 | Labour / staff tracking | Optional | Optional | 3 days |
 
 ---
 
