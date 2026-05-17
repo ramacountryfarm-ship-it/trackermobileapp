@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// import 'package:firebase_core/firebase_core.dart'; // Re-enable with google-services.json
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/livestock_provider.dart';
 import 'services/notification_service.dart';
+import 'services/fcm_service.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/main_shell.dart';
 import 'screens/batches/batch_form_screen.dart';
@@ -34,10 +36,19 @@ import 'screens/egg_trading/farmer_form_screen.dart';
 import 'screens/egg_trading/procurement_form_screen.dart';
 import 'screens/egg_trading/resale_form_screen.dart';
 import 'screens/egg_trading/wastage_form_screen.dart';
+import 'screens/reports/collection_report_screen.dart';
+import 'screens/reports/order_source_report_screen.dart';
+import 'screens/reports/reports_hub_screen.dart';
+import 'screens/reports/monthly_pl_screen.dart';
+import 'screens/reports/batch_performance_screen.dart';
+import 'screens/reports/customer_report_screen.dart';
+import 'screens/reports/egg_trend_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(); // Re-enable with google-services.json
   await NotificationService().init();
+  await FcmService().init();
   runApp(const RCFTrackerApp());
 }
 
@@ -52,9 +63,10 @@ class RCFTrackerApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LivestockProvider()),
       ],
       child: MaterialApp(
-        title: 'RCF Tracker',
+        title: 'RCF FarmLog',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.theme,
+        navigatorKey: navigatorKey,
         home: const AuthGate(),
         routes: {
           '/batch-form': (_) => const BatchFormScreen(),
@@ -85,6 +97,13 @@ class RCFTrackerApp extends StatelessWidget {
           '/procurement-form': (_) => const ProcurementFormScreen(),
           '/resale-form': (_) => const ResaleFormScreen(),
           '/wastage-form': (_) => const WastageFormScreen(),
+          '/collection-report': (_) => const CollectionReportScreen(),
+          '/order-source-report': (_) => const OrderSourceReportScreen(),
+          '/reports': (_) => const ReportsHubScreen(),
+          '/reports/monthly-pl': (_) => const MonthlyPLScreen(),
+          '/reports/batch-performance': (_) => const BatchPerformanceScreen(),
+          '/reports/customer-report': (_) => const CustomerReportScreen(),
+          '/reports/egg-trend': (_) => const EggTrendScreen(),
         },
       ),
     );

@@ -1,3 +1,6 @@
+// buildscript { dependencies { classpath("com.google.gms:google-services:4.4.2") } }
+// Re-enable above after adding google-services.json
+
 allprojects {
     repositories {
         google()

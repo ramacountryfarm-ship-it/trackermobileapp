@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/fcm_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final _authService = AuthService();
@@ -50,6 +51,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    await FcmService().unregisterOnLogout();
     await _authService.logout();
     _isLoggedIn = false;
     _username = null;

@@ -18,6 +18,10 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_local_notifications: ^17.2.2
   timezone: ^0.9.4
+  # firebase_core: ^3.13.0       # Enable after adding google-services.json
+  # firebase_messaging: ^15.2.5  # Enable after adding google-services.json
+  path_provider: ^2.1.4
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:

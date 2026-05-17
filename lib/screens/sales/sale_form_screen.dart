@@ -26,6 +26,8 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
   DateTime _date = DateTime.now();
   String _productType = 'Eggs';
   String _paymentStatus = 'Paid';
+  String _paymentMethod = 'Cash';
+  String _orderSource = 'Walk-in';
   DateTime? _dueDate;
 
   final _qtyCtrl = TextEditingController();
@@ -58,6 +60,8 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
         _customerId = s['customer'] is Map ? s['customer']['_id'] : s['customer'];
         _customerNameCtrl.text = s['customerName'] ?? '';
         _paymentStatus = s['paymentStatus'] ?? 'Paid';
+        _paymentMethod = s['paymentMethod'] ?? 'Cash';
+        _orderSource = s['orderSource'] ?? 'Walk-in';
         _amountReceivedCtrl.text = '${s['amountReceived'] ?? ''}';
         if (s['paymentDueDate'] != null) _dueDate = DateTime.tryParse(s['paymentDueDate']);
         _notesCtrl.text = s['notes'] ?? '';
@@ -90,6 +94,8 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
       'customer': _customerId,
       'customerName': customerName,
       'customerType': customerType ?? 'Walk-in',
+      'paymentMethod': _paymentMethod,
+      'orderSource': _orderSource,
       'paymentStatus': _paymentStatus,
       'amountReceived': double.tryParse(_amountReceivedCtrl.text) ?? 0,
       if (_dueDate != null) 'paymentDueDate': Fmt.dateApi(_dueDate!),
@@ -189,6 +195,30 @@ class _SaleFormScreenState extends State<SaleFormScreen> {
                 // Or walk-in name
                 _label('Walk-in Name (if not in list)'),
                 TextFormField(controller: _customerNameCtrl, decoration: const InputDecoration(hintText: 'Customer name')),
+                const SizedBox(height: 16),
+
+                // Order source + payment method side by side
+                Row(children: [
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    _label('Order From'),
+                    DropdownButtonFormField<String>(
+                      value: _orderSource,
+                      decoration: const InputDecoration(),
+                      items: C.orderSources.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                      onChanged: (v) => setState(() => _orderSource = v ?? 'Walk-in'),
+                    ),
+                  ])),
+                  const SizedBox(width: 12),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    _label('Payment Via'),
+                    DropdownButtonFormField<String>(
+                      value: _paymentMethod,
+                      decoration: const InputDecoration(),
+                      items: C.paymentMethods.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                      onChanged: (v) => setState(() => _paymentMethod = v ?? 'Cash'),
+                    ),
+                  ])),
+                ]),
                 const SizedBox(height: 16),
 
                 // Payment status

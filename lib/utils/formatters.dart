@@ -17,4 +17,17 @@ class Fmt {
   static String number(num? v) => v == null ? '0' : _num.format(v);
   static String decimal(num? v) => v == null ? '0' : _decimal.format(v);
   static String kg(num? v) => v == null ? '0 kg' : '${_decimal.format(v)} kg';
+  static String money(num? v) => v == null ? '0' : _num.format(v);
+  static String compact(double v) {
+    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
+    return v.toStringAsFixed(0);
+  }
+  static String dateDisplay(String? s) {
+    if (s == null || s.isEmpty) return '-';
+    try {
+      final d = DateTime.parse(s);
+      return DateFormat('dd MMM').format(d);
+    } catch (_) { return s; }
+  }
 }

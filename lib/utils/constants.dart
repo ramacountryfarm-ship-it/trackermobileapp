@@ -6,4 +6,6 @@ class C {
   static const vendorTypes = ['Feed Supplier', 'Bird Supplier', 'Medicine Supplier', 'Equipment Supplier', 'Contractor', 'Other'];
   static const eggDamageReasons = ['Broken', 'Cracked', 'Malformed', 'Other'];
   static const customerTypes = ['Walk-in', 'Individual', 'Wholesaler', 'Retailer'];
+  static const paymentMethods = ['Cash', 'UPI', 'Bank Transfer', 'Other'];
+  static const orderSources = ['Walk-in', 'WhatsApp', 'Instagram', 'Phone Call', 'Agent', 'Other'];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../services/sale_service.dart';
+import '../../services/invoice_service.dart';
 import '../../utils/formatters.dart';
 import '../../utils/constants.dart';
 
@@ -30,6 +31,19 @@ class _SaleListScreenState extends State<SaleListScreen> {
   }
 
   double get _totalRevenue => _sales.fold(0.0, (s, e) => s + ((e['totalAmount'] as num?)?.toDouble() ?? 0));
+
+  Future<void> _shareInvoice(String id) async {
+    final invoiceNum = 'INV-${id.length >= 6 ? id.substring(id.length - 6).toUpperCase() : id.toUpperCase()}';
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Preparing invoice…'), duration: Duration(seconds: 2), behavior: SnackBarBehavior.floating),
+    );
+    final ok = await InvoiceService.shareInvoice(id, invoiceNum);
+    if (!ok && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not generate invoice'), behavior: SnackBarBehavior.floating),
+      );
+    }
+  }
 
   Future<void> _delete(String id) async {
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
@@ -108,10 +122,17 @@ class _SaleListScreenState extends State<SaleListScreen> {
                                     Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                                       Text(Fmt.currency(s['totalAmount']), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                                       const SizedBox(height: 4),
-                                      GestureDetector(
-                                        onTap: () => _delete(s['_id']),
-                                        child: const Icon(Icons.delete_outline, size: 18, color: AppTheme.error),
-                                      ),
+                                      Row(children: [
+                                        GestureDetector(
+                                          onTap: () => _shareInvoice(s['_id']),
+                                          child: const Icon(Icons.share_outlined, size: 18, color: AppTheme.brandPrimary),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        GestureDetector(
+                                          onTap: () => _delete(s['_id']),
+                                          child: const Icon(Icons.delete_outline, size: 18, color: AppTheme.error),
+                                        ),
+                                      ]),
                                     ]),
                                   ],
                                 ),

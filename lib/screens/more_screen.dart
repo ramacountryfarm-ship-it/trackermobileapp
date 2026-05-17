@@ -12,6 +12,7 @@ class _MenuItem {
 const _items = [
   _MenuItem(Icons.swap_horiz_rounded, 'Egg Trading', '/egg-trading'),
   _MenuItem(Icons.people_outline, 'Customers', '/customers'),
+  _MenuItem(Icons.bar_chart_rounded, 'Reports', '/reports'),
   _MenuItem(Icons.grass_outlined, 'Feed Management', '/feeds'),
   _MenuItem(Icons.medication_outlined, 'Medicine', '/medicines'),
   _MenuItem(Icons.point_of_sale_outlined, 'Sales', '/sales'),

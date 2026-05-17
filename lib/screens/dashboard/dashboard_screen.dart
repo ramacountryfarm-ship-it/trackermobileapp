@@ -19,6 +19,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   List<dynamic> _alerts = [];
   Map<String, dynamic>? _weather;
   List<dynamic> _todayLogs = [];
+  Map<String, dynamic> _todayCollection = {};
   late AnimationController _animCtrl;
   late Animation<double> _fadeIn;
 
@@ -50,11 +51,13 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
         _api.get('/dashboard/alerts'),
         _api.get('/analytics/weather', query: {'lat': _farmLat, 'lon': _farmLon}),
         _api.get('/daily-logs', query: {'startDate': todayStr, 'endDate': todayStr}),
+        _api.get('/reports/collections', query: {'from': todayStr, 'to': todayStr}),
       ]);
       _stats = r[0].data ?? {};
       _alerts = r[1].data ?? [];
       _weather = r[2].data is Map ? Map<String, dynamic>.from(r[2].data) : null;
       _todayLogs = r[3].data is List ? r[3].data : [];
+      _todayCollection = r[4].data is Map ? Map<String, dynamic>.from(r[4].data) : {};
 
       // Manage daily log reminders
       if (_hasTodayLog) {
@@ -145,8 +148,18 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                       Expanded(child: _stat('To Pay Farmers', Fmt.currency(_stats['totalPendingPayables']), Icons.arrow_upward_rounded,
                           (_stats['totalPendingPayables'] as num? ?? 0) > 0 ? const Color(0xFFFF3B30) : AppTheme.gray)),
                       const SizedBox(width: 12),
-                      Expanded(child: _stat('Egg Stock', Fmt.number(_stats['eggStock']), Icons.inventory_2_rounded, const Color(0xFF9B59B6))),
+                      Expanded(child: _stat('Profit Month', Fmt.currency(_stats['profitThisMonth']),
+                          Icons.trending_up_rounded,
+                          (_stats['profitThisMonth'] as num? ?? 0) >= 0 ? const Color(0xFF34C759) : const Color(0xFFFF3B30))),
                     ]),
+                    const SizedBox(height: 20),
+
+                    // Today's collection breakdown
+                    _collectionCard(),
+                    const SizedBox(height: 12),
+
+                    // Quick report links
+                    _reportShortcuts(),
                     const SizedBox(height: 20),
 
                     // Financial
@@ -366,6 +379,116 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
         ],
       ]),
     );
+  }
+
+  Widget _collectionCard() {
+    final byMethod = List<Map>.from(_todayCollection['byMethod'] ?? []);
+    final total = (_todayCollection['grandTotal'] ?? 0).toDouble();
+    final methodColors = {
+      'Cash': const Color(0xFF34C759),
+      'UPI': const Color(0xFF007AFF),
+      'Bank Transfer': const Color(0xFFAF52DE),
+      'Other': const Color(0xFFFF9500),
+    };
+    final methodIcons = {
+      'Cash': Icons.payments_outlined,
+      'UPI': Icons.qr_code_rounded,
+      'Bank Transfer': Icons.account_balance_outlined,
+      'Other': Icons.more_horiz_rounded,
+    };
+
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/collection-report'),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppTheme.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppTheme.separator.withValues(alpha: 0.5)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Text("Today's Collection", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            const Spacer(),
+            Text(Fmt.currency(total),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF34C759))),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, size: 18, color: AppTheme.gray),
+          ]),
+          if (byMethod.isEmpty)
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text('No sales recorded today', style: TextStyle(fontSize: 13, color: AppTheme.gray)),
+            )
+          else ...[
+            const SizedBox(height: 12),
+            Row(children: byMethod.map((m) {
+              final method = m['_id'] as String? ?? 'Other';
+              final amt = (m['totalAmount'] ?? 0).toDouble();
+              final color = methodColors[method] ?? AppTheme.gray;
+              final icon = methodIcons[method] ?? Icons.paid_outlined;
+              return Expanded(child: Container(
+                margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Icon(icon, size: 16, color: color),
+                  const SizedBox(height: 6),
+                  Text(Fmt.currency(amt),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: color)),
+                  Text(method, style: const TextStyle(fontSize: 10, color: AppTheme.gray)),
+                ]),
+              ));
+            }).toList()),
+          ],
+        ]),
+      ),
+    );
+  }
+
+  Widget _reportShortcuts() {
+    return Row(children: [
+      Expanded(child: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/collection-report'),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF007AFF).withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF007AFF).withValues(alpha: 0.15)),
+          ),
+          child: Row(children: [
+            const Icon(Icons.payments_outlined, size: 20, color: Color(0xFF007AFF)),
+            const SizedBox(width: 8),
+            const Expanded(child: Text('Collection\nReport',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF007AFF)))),
+            const Icon(Icons.arrow_forward_ios, size: 12, color: Color(0xFF007AFF)),
+          ]),
+        ),
+      )),
+      const SizedBox(width: 12),
+      Expanded(child: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/order-source-report'),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF25D366).withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF25D366).withValues(alpha: 0.15)),
+          ),
+          child: Row(children: [
+            const Icon(Icons.storefront_outlined, size: 20, color: Color(0xFF25D366)),
+            const SizedBox(width: 8),
+            const Expanded(child: Text('Order\nSources',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF25D366)))),
+            const Icon(Icons.arrow_forward_ios, size: 12, color: Color(0xFF25D366)),
+          ]),
+        ),
+      )),
+    ]);
   }
 
   Widget _alertCard(dynamic a) {
